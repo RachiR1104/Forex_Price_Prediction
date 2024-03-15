@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forex Price Prediction and Advice</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .form-container, .predictions-container {
+            margin-top: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .advice-container {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Forex Price Prediction and Advice</h1>
+
+        <div class="form-container">
+            <form action="/predict_and_advise" method="post">
+                <label for="forex_pair">Enter Forex Pair (e.g., 'EURUSD=X'):</label>
+                <input type="text" id="forex_pair" name="forex_pair" required>
+                <input type="submit" value="Predict">
+            </form>
+        </div>
+
+        {% if prediction_dates and prediction_values %}
+        <div class="predictions-container">
+            <h2>Predictions for {{ forex_pair }}:</h2>
+            <canvas id="forexChart"></canvas>
+            <script>
+                var ctx = document.getElementById('forexChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: {{ prediction_dates | tojson }},
+                        datasets: [{
+                            label: 'Forex Price Prediction for {{ forex_pair }}',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            data: {{ prediction_values | tojson }}
+                        }]
+                    },
+                    options: {}
+                });
+            </script>
+        </div>
+        {% endif %}
+
+        <div class="advice-container">
+            <h2>Investment Advice:</h2>
+            <p>{{ advice }}</p>
+        </div>
+    </div>
+</body>
+</html>
